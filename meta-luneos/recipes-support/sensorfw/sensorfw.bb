@@ -22,6 +22,10 @@ SRC_URI = " \
 SRC_URI_append_pinephone = " \
     file://sensord-pinephone.conf \
 "
+# Note: maybe this should go in a bbappend in meta-smartphne...
+SRC_URI_append_hammerhead = "\
+    file://sensord-hammerhead.conf \
+"
 
 S = "${WORKDIR}/git"
 
