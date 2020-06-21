@@ -1,0 +1,62 @@
+From 519db540d9fca70883d52ef29252bf2629aeba8a Mon Sep 17 00:00:00 2001
+From: Mohammed Hassan <mohammed.hassan@jolla.com>
+Date: Mon, 29 Feb 2016 13:00:57 +0200
+Subject: [PATCH 3/6] nemo: Add support for camera torch mode
+
+This is based on the work by Dmytro Poplavskiy
+Original patch URL: https://codereview.qt-project.org/#/c/5503/1
+
+Origin: upstream, https://git.sailfishos.org/mer-core/qtmultimedia/commit/1992c78705a6dfc47d2d96f8a84145a09c1e5402
+Last-updated: 2019-09-16
+---
+ .../gstreamer/camerabin/camerabinflash.cpp    | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/src/plugins/gstreamer/camerabin/camerabinflash.cpp b/src/plugins/gstreamer/camerabin/camerabinflash.cpp
+index 2bf7a277..0211a068 100644
+--- a/src/plugins/gstreamer/camerabin/camerabinflash.cpp
++++ b/src/plugins/gstreamer/camerabin/camerabinflash.cpp
+@@ -75,6 +75,12 @@ QCameraExposure::FlashModes CameraBinFlash::flashMode() const
+         modes |= QCameraExposure::FlashAuto;
+         break;
+     }
++
++    gboolean torchEnabled = false;
++    g_object_get(G_OBJECT(m_session->cameraSource()), "video-torch", &torchEnabled, NULL);
++    if (torchEnabled)
++        modes |= QCameraExposure::FlashTorch;
++
+     return modes;
+ }
+ 
+@@ -90,10 +96,27 @@ void CameraBinFlash::setFlashMode(QCameraExposure::FlashModes mode)
+     else if (mode.testFlag(QCameraExposure::FlashRedEyeReduction)) flashMode = GST_PHOTOGRAPHY_FLASH_MODE_RED_EYE;
+ 
+     gst_photography_set_flash_mode(m_session->photography(), flashMode);
++
++    gboolean torchEnabled = false;
++    g_object_get(G_OBJECT(m_session->cameraSource()), "video-torch", &torchEnabled, NULL);
++
++    gboolean enableTorch = mode.testFlag(QCameraExposure::FlashTorch);
++
++    if (bool(enableTorch) != bool(torchEnabled)) {
++        g_object_set(G_OBJECT(m_session->cameraSource()), "video-torch", enableTorch, NULL);
++    }
+ }
+ 
+ bool CameraBinFlash::isFlashModeSupported(QCameraExposure::FlashModes mode) const
+ {
++
++    //torch light is allowed only in video capture mode
++    if (m_session->captureMode() == QCamera::CaptureVideo) {
++        if (mode == QCameraExposure::FlashTorch ||
++            mode == QCameraExposure::FlashTorch | QCameraExposure::FlashOff)
++            return true;
++    }
++
+     return  mode == QCameraExposure::FlashOff ||
+             mode == QCameraExposure::FlashOn ||
+             mode == QCameraExposure::FlashAuto ||
+-- 
+2.17.0
+

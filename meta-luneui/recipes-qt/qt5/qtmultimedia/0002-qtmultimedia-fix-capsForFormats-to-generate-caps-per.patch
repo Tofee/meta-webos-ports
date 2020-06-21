@@ -1,0 +1,28 @@
+From 0b27ba6cdd92686865d1509f003b3921c7d05d7d Mon Sep 17 00:00:00 2001
+From: Christophe Chapuis <chris.chapuis@gmail.com>
+Date: Tue, 16 Jun 2020 19:46:31 +0000
+Subject: [PATCH 2/6] [qtmultimedia] fix capsForFormats to generate caps
+ permitting caps features. Fixes JB#29720
+
+Origin: upstream, https://git.sailfishos.org/mer-core/qtmultimedia/commit/a756991a4225865e36f27f4dd91914c623f4233a
+Last-updated: 2019-09-16
+---
+ src/gsttools/qgstutils.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/gsttools/qgstutils.cpp b/src/gsttools/qgstutils.cpp
+index 3f68244b..ffebdbbd 100644
+--- a/src/gsttools/qgstutils.cpp
++++ b/src/gsttools/qgstutils.cpp
+@@ -1239,6 +1239,8 @@ GstCaps *QGstUtils::capsForFormats(const QList<QVideoFrame::PixelFormat> &format
+                     "video/x-raw",
+                     "format"   , G_TYPE_STRING, gst_video_format_to_string(qt_videoFormatLookup[index].gstFormat),
+                     nullptr));
++
++            gst_caps_set_features(caps, gst_caps_get_size(caps) - 1, gst_caps_features_new_any());
+         }
+     }
+ #else
+-- 
+2.17.0
+

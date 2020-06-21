@@ -1,0 +1,37 @@
+From e370c7190289821021338eb8a30951cd63d98a78 Mon Sep 17 00:00:00 2001
+From: Mohammed Hassan <mohammed.hassan@jolla.com>
+Date: Mon, 11 Jul 2016 12:59:31 +0300
+Subject: [PATCH 5/6] nemo: gstreamer: take into account ready-for-capture
+ property when we are calculating the final state
+
+Origin: upstream, https://git.sailfishos.org/mer-core/qtmultimedia/commit/46c29f5b0bb9efca86fe5c57cc0cd1fec296141b
+Last-updated: 2019-09-16
+---
+ src/plugins/gstreamer/camerabin/camerabinimagecapture.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/plugins/gstreamer/camerabin/camerabinimagecapture.cpp b/src/plugins/gstreamer/camerabin/camerabinimagecapture.cpp
+index b164bc31..21ef728c 100644
+--- a/src/plugins/gstreamer/camerabin/camerabinimagecapture.cpp
++++ b/src/plugins/gstreamer/camerabin/camerabinimagecapture.cpp
+@@ -71,6 +71,7 @@ CameraBinImageCapture::CameraBinImageCapture(CameraBinSession *session)
+     connect(m_session, SIGNAL(imageExposed(int)), this, SIGNAL(imageExposed(int)));
+     connect(m_session, SIGNAL(imageCaptured(int,QImage)), this, SIGNAL(imageCaptured(int,QImage)));
+     connect(m_session->cameraControl()->resourcePolicy(), SIGNAL(canCaptureChanged()), this, SLOT(updateState()));
++    connect(m_session, SIGNAL(handleReadyForCaptureChanged(bool)), this, SLOT(updateState()));
+ 
+     m_session->bus()->installMessageFilter(this);
+ }
+@@ -107,7 +108,8 @@ void CameraBinImageCapture::cancelCapture()
+ void CameraBinImageCapture::updateState()
+ {
+     bool ready = m_session->status() == QCamera::ActiveStatus
+-            && m_session->cameraControl()->resourcePolicy()->canCapture();
++            && m_session->cameraControl()->resourcePolicy()->canCapture()
++            && m_session->isReadyForCapture();
+     if (m_ready != ready) {
+ #ifdef DEBUG_CAPTURE
+         qDebug() << "readyForCaptureChanged" << ready;
+-- 
+2.17.0
+

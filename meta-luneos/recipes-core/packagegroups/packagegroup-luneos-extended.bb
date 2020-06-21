@@ -128,12 +128,8 @@ LIBHYBRIS_RDEPENDS = " \
     qt5-qpa-hwcomposer-plugin \
     qtscenegraph-adaptation \
     \
-    exiv2 \
-    libpulse-simple0 \
-    qtubuntu-camera \
-    libqtubuntu-media-signals2 \
-    qtvideo-node \
     nyx-modules-hybris \
+    gst-droid \
     \
     ofono-ril-binder-plugin \
 "

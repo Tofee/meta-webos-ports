@@ -1,0 +1,40 @@
+From ab68f8329667e3f3a3eb04549af031d45afdd192 Mon Sep 17 00:00:00 2001
+From: Christophe Chapuis <chris.chapuis@gmail.com>
+Date: Wed, 17 Jun 2020 21:03:01 +0000
+Subject: [PATCH] QCamera: select default device if no name given
+
+---
+ src/multimedia/camera/qcamera.cpp | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/src/multimedia/camera/qcamera.cpp b/src/multimedia/camera/qcamera.cpp
+index 79412b96..d2a13566 100644
+--- a/src/multimedia/camera/qcamera.cpp
++++ b/src/multimedia/camera/qcamera.cpp
+@@ -351,12 +351,17 @@ QCamera::QCamera(const QByteArray& deviceName, QObject *parent):
+     bool found = false;
+     // Pass device name to service.
+     if (d->deviceControl) {
+-        const QString name = QString::fromLatin1(deviceName);
+-        for (int i = 0; i < d->deviceControl->deviceCount(); i++) {
+-            if (d->deviceControl->deviceName(i) == name) {
+-                d->deviceControl->setSelectedDevice(i);
+-                found = true;
+-                break;
++        if (deviceName.isEmpty()) {
++            d->deviceControl->setSelectedDevice(d->deviceControl->defaultDevice());
++            found = true;
++        } else {
++            const QString name = QString::fromLatin1(deviceName);
++            for (int i = 0; i < d->deviceControl->deviceCount(); i++) {
++                if (d->deviceControl->deviceName(i) == name) {
++                    d->deviceControl->setSelectedDevice(i);
++                    found = true;
++                    break;
++                }
+             }
+         }
+     }
+-- 
+2.17.0
+
