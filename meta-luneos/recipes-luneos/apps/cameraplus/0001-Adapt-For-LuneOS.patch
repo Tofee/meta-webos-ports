@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 83dc820..0ca79e7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,8 +42,8 @@ if (PLATFORM STREQUAL "sailfish")
+   find_package(Qt5Qml REQUIRED)
+   find_package(Qt5Quick REQUIRED)
+   find_package(Qt5Qml REQUIRED)
+-  find_package(Qt5LinguistTools REQUIRED)
+-  pkg_check_modules(QT_SYSTEM_INFO REQUIRED Qt5SystemInfo)
++  find_package(Qt5LinguistTools)
++  pkg_check_modules(QT_SYSTEM_INFO Qt5SystemInfo)
+   add_definitions(-DQT5 -DSAILFISH)
+   set(SAILFISH 1)
+   set(QT5 1)
