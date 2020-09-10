@@ -130,6 +130,7 @@ LIBHYBRIS_RDEPENDS = " \
     \
     nyx-modules-hybris \
     gst-droid \
+    nemo-qtmultimedia-plugins \
     \
     ofono-ril-binder-plugin \
 "
