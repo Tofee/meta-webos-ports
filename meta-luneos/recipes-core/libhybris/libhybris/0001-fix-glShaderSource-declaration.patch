@@ -1,0 +1,116 @@
+From dca7f80afaa3959e442205391929d6de2ad37bb7 Mon Sep 17 00:00:00 2001
+From: Christophe Chapuis <chris.chapuis@gmail.com>
+Date: Sat, 12 Sep 2020 15:01:29 +0000
+Subject: [PATCH] fix glShaderSource declaration
+
+glShaderSource has a different declaration in
+https://www.khronos.org/registry/OpenGL/api/GLES3/gl32.h and
+https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glShaderSource.xhtml.
+The latter is identical to GLES2 (which is to be expected), but the
+former uses "const GLchar *const*string" instead of
+"const GLchar **string"
+
+Signed-off-by: Christophe Chapuis <chris.chapuis@gmail.com>
+---
+ hybris/glesv2/glesv2.c      | 2 +-
+ hybris/include/GL/glext.h   | 2 +-
+ hybris/include/GLES3/gl3.h  | 4 ++--
+ hybris/include/GLES3/gl31.h | 4 ++--
+ hybris/include/GLES3/gl32.h | 4 ++--
+ 5 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/hybris/glesv2/glesv2.c b/hybris/glesv2/glesv2.c
+index 716bbde..9371635 100644
+--- a/hybris/glesv2/glesv2.c
++++ b/hybris/glesv2/glesv2.c
+@@ -132,7 +132,7 @@ HYBRIS_IMPLEMENT_VOID_FUNCTION4(glesv2, glRenderbufferStorage, GLenum, GLenum, G
+ HYBRIS_IMPLEMENT_VOID_FUNCTION2(glesv2, glSampleCoverage, GLfloat, GLboolean);
+ HYBRIS_IMPLEMENT_VOID_FUNCTION4(glesv2, glScissor, GLint, GLint, GLsizei, GLsizei);
+ HYBRIS_IMPLEMENT_VOID_FUNCTION5(glesv2, glShaderBinary, GLsizei, const GLuint *, GLenum, const void *, GLsizei);
+-HYBRIS_IMPLEMENT_VOID_FUNCTION4(glesv2, glShaderSource, GLuint, GLsizei, const GLchar *const *, const GLint *);
++HYBRIS_IMPLEMENT_VOID_FUNCTION4(glesv2, glShaderSource, GLuint, GLsizei, const GLchar **, const GLint *);
+ HYBRIS_IMPLEMENT_VOID_FUNCTION3(glesv2, glStencilFunc, GLenum, GLint, GLuint);
+ HYBRIS_IMPLEMENT_VOID_FUNCTION4(glesv2, glStencilFuncSeparate, GLenum, GLenum, GLint, GLuint);
+ HYBRIS_IMPLEMENT_VOID_FUNCTION1(glesv2, glStencilMask, GLuint);
+diff --git a/hybris/include/GL/glext.h b/hybris/include/GL/glext.h
+index 44ab7c6..b360c9d 100644
+--- a/hybris/include/GL/glext.h
++++ b/hybris/include/GL/glext.h
+@@ -6602,7 +6602,7 @@ GLAPI void APIENTRY glGetVertexAttribPointerv (GLuint index, GLenum pname, GLvoi
+ GLAPI GLboolean APIENTRY glIsProgram (GLuint program);
+ GLAPI GLboolean APIENTRY glIsShader (GLuint shader);
+ GLAPI void APIENTRY glLinkProgram (GLuint program);
+-GLAPI void APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar* const *string, const GLint *length);
++GLAPI void APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar**string, const GLint *length);
+ GLAPI void APIENTRY glUseProgram (GLuint program);
+ GLAPI void APIENTRY glUniform1f (GLint location, GLfloat v0);
+ GLAPI void APIENTRY glUniform2f (GLint location, GLfloat v0, GLfloat v1);
+diff --git a/hybris/include/GLES3/gl3.h b/hybris/include/GLES3/gl3.h
+index d8153c0..58a2662 100644
+--- a/hybris/include/GLES3/gl3.h
++++ b/hybris/include/GLES3/gl3.h
+@@ -476,7 +476,7 @@ typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEPROC) (GLenum target, GLenum
+ typedef void (GL_APIENTRYP PFNGLSAMPLECOVERAGEPROC) (GLfloat value, GLboolean invert);
+ typedef void (GL_APIENTRYP PFNGLSCISSORPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
+ typedef void (GL_APIENTRYP PFNGLSHADERBINARYPROC) (GLsizei count, const GLuint *shaders, GLenum binaryformat, const void *binary, GLsizei length);
+-typedef void (GL_APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
++typedef void (GL_APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+ typedef void (GL_APIENTRYP PFNGLSTENCILFUNCPROC) (GLenum func, GLint ref, GLuint mask);
+ typedef void (GL_APIENTRYP PFNGLSTENCILFUNCSEPARATEPROC) (GLenum face, GLenum func, GLint ref, GLuint mask);
+ typedef void (GL_APIENTRYP PFNGLSTENCILMASKPROC) (GLuint mask);
+@@ -618,7 +618,7 @@ GL_APICALL void GL_APIENTRY glRenderbufferStorage (GLenum target, GLenum interna
+ GL_APICALL void GL_APIENTRY glSampleCoverage (GLfloat value, GLboolean invert);
+ GL_APICALL void GL_APIENTRY glScissor (GLint x, GLint y, GLsizei width, GLsizei height);
+ GL_APICALL void GL_APIENTRY glShaderBinary (GLsizei count, const GLuint *shaders, GLenum binaryformat, const void *binary, GLsizei length);
+-GL_APICALL void GL_APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
++GL_APICALL void GL_APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+ GL_APICALL void GL_APIENTRY glStencilFunc (GLenum func, GLint ref, GLuint mask);
+ GL_APICALL void GL_APIENTRY glStencilFuncSeparate (GLenum face, GLenum func, GLint ref, GLuint mask);
+ GL_APICALL void GL_APIENTRY glStencilMask (GLuint mask);
+diff --git a/hybris/include/GLES3/gl31.h b/hybris/include/GLES3/gl31.h
+index 12a94a5..54a5f44 100644
+--- a/hybris/include/GLES3/gl31.h
++++ b/hybris/include/GLES3/gl31.h
+@@ -476,7 +476,7 @@ typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEPROC) (GLenum target, GLenum
+ typedef void (GL_APIENTRYP PFNGLSAMPLECOVERAGEPROC) (GLfloat value, GLboolean invert);
+ typedef void (GL_APIENTRYP PFNGLSCISSORPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
+ typedef void (GL_APIENTRYP PFNGLSHADERBINARYPROC) (GLsizei count, const GLuint *shaders, GLenum binaryformat, const void *binary, GLsizei length);
+-typedef void (GL_APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
++typedef void (GL_APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+ typedef void (GL_APIENTRYP PFNGLSTENCILFUNCPROC) (GLenum func, GLint ref, GLuint mask);
+ typedef void (GL_APIENTRYP PFNGLSTENCILFUNCSEPARATEPROC) (GLenum face, GLenum func, GLint ref, GLuint mask);
+ typedef void (GL_APIENTRYP PFNGLSTENCILMASKPROC) (GLuint mask);
+@@ -618,7 +618,7 @@ GL_APICALL void GL_APIENTRY glRenderbufferStorage (GLenum target, GLenum interna
+ GL_APICALL void GL_APIENTRY glSampleCoverage (GLfloat value, GLboolean invert);
+ GL_APICALL void GL_APIENTRY glScissor (GLint x, GLint y, GLsizei width, GLsizei height);
+ GL_APICALL void GL_APIENTRY glShaderBinary (GLsizei count, const GLuint *shaders, GLenum binaryformat, const void *binary, GLsizei length);
+-GL_APICALL void GL_APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
++GL_APICALL void GL_APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+ GL_APICALL void GL_APIENTRY glStencilFunc (GLenum func, GLint ref, GLuint mask);
+ GL_APICALL void GL_APIENTRY glStencilFuncSeparate (GLenum face, GLenum func, GLint ref, GLuint mask);
+ GL_APICALL void GL_APIENTRY glStencilMask (GLuint mask);
+diff --git a/hybris/include/GLES3/gl32.h b/hybris/include/GLES3/gl32.h
+index 7345a2f..dec95dc 100644
+--- a/hybris/include/GLES3/gl32.h
++++ b/hybris/include/GLES3/gl32.h
+@@ -476,7 +476,7 @@ typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEPROC) (GLenum target, GLenum
+ typedef void (GL_APIENTRYP PFNGLSAMPLECOVERAGEPROC) (GLfloat value, GLboolean invert);
+ typedef void (GL_APIENTRYP PFNGLSCISSORPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
+ typedef void (GL_APIENTRYP PFNGLSHADERBINARYPROC) (GLsizei count, const GLuint *shaders, GLenum binaryformat, const void *binary, GLsizei length);
+-typedef void (GL_APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
++typedef void (GL_APIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+ typedef void (GL_APIENTRYP PFNGLSTENCILFUNCPROC) (GLenum func, GLint ref, GLuint mask);
+ typedef void (GL_APIENTRYP PFNGLSTENCILFUNCSEPARATEPROC) (GLenum face, GLenum func, GLint ref, GLuint mask);
+ typedef void (GL_APIENTRYP PFNGLSTENCILMASKPROC) (GLuint mask);
+@@ -618,7 +618,7 @@ GL_APICALL void GL_APIENTRY glRenderbufferStorage (GLenum target, GLenum interna
+ GL_APICALL void GL_APIENTRY glSampleCoverage (GLfloat value, GLboolean invert);
+ GL_APICALL void GL_APIENTRY glScissor (GLint x, GLint y, GLsizei width, GLsizei height);
+ GL_APICALL void GL_APIENTRY glShaderBinary (GLsizei count, const GLuint *shaders, GLenum binaryformat, const void *binary, GLsizei length);
+-GL_APICALL void GL_APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length);
++GL_APICALL void GL_APIENTRY glShaderSource (GLuint shader, GLsizei count, const GLchar **string, const GLint *length);
+ GL_APICALL void GL_APIENTRY glStencilFunc (GLenum func, GLint ref, GLuint mask);
+ GL_APICALL void GL_APIENTRY glStencilFuncSeparate (GLenum face, GLenum func, GLint ref, GLuint mask);
+ GL_APICALL void GL_APIENTRY glStencilMask (GLuint mask);
+-- 
+2.17.0
+

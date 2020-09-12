@@ -1,3 +1,6 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
+SRC_URI += "file://0001-fix-glShaderSource-declaration.patch;patchdir=.."
+
 DEPENDS += "wayland"
 EXTRA_OECONF += " \
     --enable-wayland \
