@@ -12,12 +12,9 @@ SRC_URI = "git://github.com/sailfishos/gst-droid.git;protocol=https \
            file://0001-Remove-references-to-mode-that-are-not-in-upstream-g.patch \
            file://gstdroidcodec.conf \
 "
-#too recent, issues with buffer pool
-#SRCREV = "e755c8521b3ff0a622fba4c85e57ff41015c7793" 
-#PV = "20200424+git${SRCPV}"
 
-SRCREV = "1d3c3cd93340a50559424450f0941d42c95de5f7"
-PV = "20200220+git${SRCPV}"
+SRCREV = "f6a1b484cbbbd77a636cc860f38b5d77241e0a41"
+PV = "20201104+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 B = "${S}"

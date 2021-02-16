@@ -7,11 +7,9 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 COMPATIBLE_MACHINE = "^halium$"
 
 SRC_URI = "git://github.com/sailfishos/droidmedia.git;protocol=https"
-#SRCREV = "80de4445c86df576d6458be256d7907652016df2"
-#PV = "20200424+git${SRCPV}"
 
-SRCREV = "52143f26ff6dc2346cf4f14792c175493cf529b1"
-PV = "20191025+git${SRCPV}"
+SRCREV = "d0d14dd9853ed41d5fc7196a65e0453b7fa0f3b6"
+PV = "20210203+git${SRCPV}"
 
 
 DEPENDS = "libhybris"
