@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = " \
 "
 
 DEPENDS = "qtbase qtdeclarative qtwayland-webos libxkbcommon pmloglib luna-service2 glib-2.0 udev wayland"
-RDEPENDS:${PN} = "qtbase-plugins configd"
+RDEPENDS:${PN} = "qtbase-plugins configd imemanager"
 
 PACKAGECONFIG[libim] = "CONFIG+=enable-libim,CONFIG-=enable-libim,libim"
 
