@@ -26,7 +26,7 @@ inherit webos_public_repo
 inherit webos_cmake_qt6
 inherit webos_system_bus
 inherit webos_configure_manifest
-inherit systemd
+inherit webos_systemd
 inherit pkgconfig
 
 SRC_URI = "${WEBOSOSE_GIT_REPO_COMPLETE} \

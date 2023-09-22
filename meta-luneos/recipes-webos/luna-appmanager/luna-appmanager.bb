@@ -16,6 +16,8 @@ RDEPENDS:${PN} += " \
     bash \
 "
 
+LUNEOS_SYSTEMD_SERVICE = "${PN}.service"
+
 WEBOS_GIT_PARAM_BRANCH = "herrie/cleanup"
 SRC_URI = "${WEBOS_PORTS_GIT_REPO_COMPLETE}"
 

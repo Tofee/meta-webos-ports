@@ -26,6 +26,8 @@ inherit webos_cmake_qt6
 inherit webos_systemd
 inherit pkgconfig
 
+LUNEOS_SYSTEMD_SERVICE = "${PN}.service"
+
 SRC_URI = "${WEBOS_PORTS_GIT_REPO_COMPLETE}"
 S = "${WORKDIR}/git"
 
