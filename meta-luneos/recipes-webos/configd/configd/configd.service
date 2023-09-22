@@ -29,3 +29,6 @@ EnvironmentFile=-/var/systemd/system/env/configd.env
 Environment=WEBOS_TARGET_DISTRO_VARIANT=normal
 ExecStart=/usr/sbin/configd
 Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
