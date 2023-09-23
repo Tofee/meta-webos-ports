@@ -60,7 +60,7 @@ do_install:append() {
     install -d ${D}${webos_sysbus_groupsdir}
     sed "s|\$\$WEBOS_INSTALL_BINS|$sbindir|" < ${WEBOS_SYSTEM_BUS_FILES_LOCATION}/${SERVICE_NAME}.service.in > ${D}${webos_sysbus_servicedir}/${SERVICE_NAME}.service
     install -v -m 0644 ${WEBOS_SYSTEM_BUS_FILES_LOCATION}/${SERVICE_NAME}.perm.json ${D}${webos_sysbus_permissionsdir}/${SERVICE_NAME}.perm.json
-    sed "s|\$\$WEBOS_INSTALL_BINS|$sbindir|" < ${WEBOS_SYSTEM_BUS_FILES_LOCATION}/${SERVICE_NAME}.role.json.in > ${D}${webos_sysbus_rolesdir}/${SERVICE_NAME}.role.json
+    sed "s|\$\$WEBOS_INSTALL_BINS|$sbindir|g;s|[\]||g" < ${WEBOS_SYSTEM_BUS_FILES_LOCATION}/${SERVICE_NAME}.role.json.in > ${D}${webos_sysbus_rolesdir}/${SERVICE_NAME}.role.json
     install -v -m 0644 ${WEBOS_SYSTEM_BUS_FILES_LOCATION}/${SERVICE_NAME}.api.json ${D}${webos_sysbus_apipermissionsdir}/${SERVICE_NAME}.api.json
     install -v -m 0644 ${WEBOS_SYSTEM_BUS_FILES_LOCATION}/${SERVICE_NAME}.groups.json ${D}${webos_sysbus_groupsdir}/${SERVICE_NAME}.groups.json
     #FixMe: Weird quirk installs role.json in services folder
