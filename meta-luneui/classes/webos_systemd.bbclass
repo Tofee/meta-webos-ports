@@ -24,16 +24,18 @@ def removesuffix(text, suffix):
     else:
         return text
 
-SYSTEMD_SERVICE:${PN} ?= "${@' '.join([removesuffix(f, '.in') for f in '${LUNEOS_SYSTEMD_SERVICE}'.split()])}"
-SYSTEMD_SERVICE:${PN} = "${@' '.join([removesuffix(f, '.in') for f in '${WEBOS_SYSTEMD_SERVICE}'.split()])}"
+SYSTEMD_SERVICE:${PN} ?= "${@' '.join([removesuffix(f, '.in') for f in '${LUNEOS_SYSTEMD_SERVICE} ${WEBOS_SYSTEMD_SERVICE}'.split()])}"
 
 #SYSTEMD_AUTO_ENABLE = "disable"
 
 install_units() {
     install -d ${WORKDIR}/staging-units
 
-    if [ $(ls ${S}/files/systemd/${LUNEOS_SYSTEMD_SERVICE} | wc -l) -gt 0 ]; then
-        cp ${S}/files/systemd/${LUNEOS_SYSTEMD_SERVICE} ${WORKDIR}/staging-units/ && cp ${S}/files/systemd/${LUNEOS_SYSTEMD_SERVICE} ${WORKDIR}
+    if [ -n "${LUNEOS_SYSTEMD_SERVICE}" ]; then
+        for f in ${LUNEOS_SYSTEMD_SERVICE}; do
+            cp ${S}/files/systemd/${LUNEOS_SYSTEMD_SERVICE} ${WORKDIR}/
+            cp ${S}/files/systemd/${LUNEOS_SYSTEMD_SERVICE} ${WORKDIR}/staging-units/
+        done
     fi
 
     for f in ${WEBOS_SYSTEMD_SERVICE} ${WEBOS_SYSTEMD_SCRIPT}; do
